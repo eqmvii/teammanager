@@ -1,0 +1,11 @@
+{
+  "name": "teamsportsexample",
+  "version": "1.0.0",
+  "description": "A sports team management game",
+  "main": "teamManager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
