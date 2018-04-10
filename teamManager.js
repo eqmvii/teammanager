@@ -1,10 +1,13 @@
 // teamManager.js
 
-function Player(name, position, defense) {
+var inquirer = require('inquirer');
+
+
+function Player(name, position, offense, defense) {
     this.name = name;
     this.position = position;
-    this.defense = Math.floor(Math.random() * 10) + 1;
     this.offense = Math.floor(Math.random() * 10) + 1;
+    this.defense = Math.floor(Math.random() * 10) + 1;
     this.goodGame = function() {
         this.offense += Math.floor(Math.random() * 2); // concise way to increase offense by 0 or 1
         this.defense += Math.floor(Math.random() * 2); // concise way to increase defense by 0 or 1
@@ -19,17 +22,56 @@ function Player(name, position, defense) {
     };
 }
 
-var myPlayer = new Player("Eric", "1st base coach");
-myPlayer.printStats();
-myPlayer.goodGame();
-myPlayer.printStats();
-myPlayer.goodGame();
-myPlayer.printStats();
-myPlayer.goodGame();
-myPlayer.printStats();
+// var myPlayer = new Player("Eric", "1st base coach");
+// myPlayer.printStats();
+// myPlayer.goodGame();
+// myPlayer.printStats();
+// myPlayer.goodGame();
+// myPlayer.printStats();
+// myPlayer.goodGame();
+// myPlayer.printStats();
+
+var playersArray = [];
+
+function makeAPlayer() {
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "Player's Name?"
+        },
+        {
+            name: "position",
+            message: "Position?"
+        }
+        // ,{
+        //     name: "offense",
+        //     message: "Offense?"
+        // },
+        // {
+        //     name: "defense",
+        //     message: "Defense??"
+        // }
+        ]).then(ans => {
+        console.log(ans);
+        newPlayer = new Player(ans.name, ans.position);
+        playersArray.push(newPlayer);
+        if (playersArray.length < 3) {
+            makeAPlayer();
+        } else {
+            console.log("Printing all your players!");
+            for (let i = 0; i < playersArray.length; i++) {
+                playersArray[i].printStats();
+                }
+        }
+    });
+}
+
+makeAPlayer();
 
 
-/* 
+
+
+/*
 
 # **Instructions**
 
@@ -68,5 +110,6 @@ myPlayer.printStats();
 * HINT: Remember to use recursion when looping with inquirer! Otherwise your program might not return the prompts as you expect.
 
 * HINT: It has been a while since we have worked with random numbers explicitly. If you are having troubles, look up Math.random on Google and you should find some resources to help.
+
 
 */
