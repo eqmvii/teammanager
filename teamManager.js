@@ -8,17 +8,16 @@ function Player(name, position, offense, defense) {
     this.position = position;
     this.offense = Math.floor(Math.random() * 10) + 1;
     this.defense = Math.floor(Math.random() * 10) + 1;
-    this.goodGame = function() {
+    this.goodGame = function () {
         this.offense += Math.floor(Math.random() * 2); // concise way to increase offense by 0 or 1
         this.defense += Math.floor(Math.random() * 2); // concise way to increase defense by 0 or 1
     };
-    this.badGame = function() {
+    this.badGame = function () {
         this.offense -= Math.floor(Math.random() * 2); // concise way to decrease offense by 0 or 1
         this.defense -= Math.floor(Math.random() * 2); // concise way to decrease defense by 0 or 1
     }
-    this.printStats = function() {
-        console.log(`Stats for ${this.name}:`);
-        console.log(`Pstn: ${this.position} | Def: ${this.defense} | Off: ${this.offense}`);
+    this.printStats = function () {
+        console.log(`${this.name} | Pstn: ${this.position}  | Off: ${this.offense}  | Def: ${this.defense}`);
     };
 }
 
@@ -34,15 +33,22 @@ function Player(name, position, offense, defense) {
 var playersArray = [];
 
 function makeAPlayer() {
+    var playerNumber = playersArray.length + 1;
+    var position = "starter";
+    if (playerNumber === 3) {
+        position = "sub    ";
+    }
     inquirer.prompt([
         {
             name: "name",
-            message: "Player's Name?"
-        },
-        {
-            name: "position",
-            message: "Position?"
+            message: `Name of player #${playerNumber}, who is a ${position}`
         }
+        // ,{
+        //     type: "list",
+        //     name: "position",
+        //     message: "Position?",
+        //     choices: ["starter", "alt"]
+        // }
         // ,{
         //     name: "offense",
         //     message: "Offense?"
@@ -51,48 +57,40 @@ function makeAPlayer() {
         //     name: "defense",
         //     message: "Defense??"
         // }
-        ]).then(ans => {
-        console.log(ans);
-        newPlayer = new Player(ans.name, ans.position);
+    ]).then(ans => {
+        //console.log(ans);
+        newPlayer = new Player(ans.name, position);
         playersArray.push(newPlayer);
         if (playersArray.length < 3) {
             makeAPlayer();
         } else {
-            console.log("Printing all your players!");
+            playersArray.offense = 0; // let's give the array an
+            playersArray.defense = 0;
+            // console.log("Printing all your players!");
             for (let i = 0; i < playersArray.length; i++) {
                 playersArray[i].printStats();
-                }
+                playersArray.offense += playersArray[i].offense;
+                playersArray.defense += playersArray[i].defense;
+            }
+            // console.log("Players array: ");
+            // console.log(playersArray);
+            // console.log(playersArray.length);
+            console.log(`Total Offense: ${playersArray.offense}; Total Defense: ${playersArray.defense}`);
+            playGame();
         }
     });
 }
 
+function playGame() {
+    console.log("Time to play a game!");
+    var randOne = Math.floor(Math.random() * 20) + 1;
+    var randTwo = Math.floor(Math.random() * 20) + 1;
+    console.log(`1: ${randOne}; 2: ${randTwo}`);
+}
+
 makeAPlayer();
 
-
-
-
 /*
-
-# **Instructions**
-
-* Over the course of this assignment you are going to put together a function which uses constructors and user input to create and manage a team of players.
-
-* Start out by creating a constructor function called "Player" with the following properties and methods...
-
-  * `name`: Property which contains the player's name
-  * `position`: Property which holds the player's position
-  * `offense`: Property which is a value between 1 and 10 to show how good this player is on offense
-  * `defense`: Property which is a value between 1 and 10 to show how good this player is on defense
-  * `goodGame`: Method which increases either the player's offense or defense property based upon a coinflip.
-  * `badGame`: Method which decreases either the player's offense or defense property based upon a coinflip.
-  * `printStats`: Method which prints all of the player's properties to the screen
-
-* Now create a program which allows the user to create 3 unique players; 2 starters and a sub. It should take as user input the name, position, offense, and defense of each player.
-
-* Once all of the players have been created, print their stats.
-
-* Once your code is functioning properly, move on to create a function called "playGame" which will be run after all of the players have been created and will do the following:
-
   * Run 5 times. Each time the function runs:
     * Two random numbers between 1 and 20 are rolled and compared against the starters' offensive and defensive stats
       * If the first number is lower than the sum of the team's offensive stat, add one point to the team's score.
