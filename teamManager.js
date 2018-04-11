@@ -31,6 +31,8 @@ function Player(name, position, offense, defense) {
 // myPlayer.printStats();
 
 var playersArray = [];
+playersArray.score = 0; // let's give the array a property. NEVER DO THIS.
+playersArray.gamesPlayed = 0; // let's give the array a property. NEVER DO THIS.
 
 function makeAPlayer() {
     var playerNumber = playersArray.length + 1;
@@ -64,10 +66,10 @@ function makeAPlayer() {
         if (playersArray.length < 3) {
             makeAPlayer();
         } else {
-            playersArray.offense = 0; // let's give the array an
-            playersArray.defense = 0;
+            playersArray.offense = 0; // let's give the array a property. NEVER DO THIS.
+            playersArray.defense = 0; // let's give the array a property. NEVER DO THIS.
             // console.log("Printing all your players!");
-            for (let i = 0; i < playersArray.length; i++) {
+            for (let i = 0; i < playersArray.length - 1; i++) { // sub is the end of the array
                 playersArray[i].printStats();
                 playersArray.offense += playersArray[i].offense;
                 playersArray.defense += playersArray[i].defense;
@@ -82,10 +84,36 @@ function makeAPlayer() {
 }
 
 function playGame() {
+    var swapPlayers = false;
     console.log("Time to play a game!");
     var randOne = Math.floor(Math.random() * 20) + 1;
     var randTwo = Math.floor(Math.random() * 20) + 1;
     console.log(`1: ${randOne}; 2: ${randTwo}`);
+    if (randOne < playersArray.offense) {
+        console.log("Offense was good enough, +1 point!");
+        playersArray.score++;
+        swapPlayers = true;
+    }
+    if (randTwo > playersArray.defense) {
+        console.log("Defense blew it, -1 point!");
+        playersArray.score--;
+        swapPlayers = true;
+    }
+    inquirer.prompt([{
+        type: "list",
+        name: "pos",
+        message: "swap a player?",
+        choices: ["0", "1", "Do not substitute"]
+    }]).then(ans => {
+        console.log(ans);
+        console.log("Next game starts in 2 seconds");
+        if (playersArray.gamesPlayed < 5) {
+            playersArray.gamesPlayed++;
+            setTimeout(playGame, 2 * 1000);
+        } else {
+            console.log(`Score: ${playersArray.score}`);
+        }
+    })
 }
 
 makeAPlayer();
